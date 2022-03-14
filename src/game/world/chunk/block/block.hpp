@@ -1,10 +1,11 @@
 #pragma once
 
+#include <map>
+
 class Block {
     public:
         struct BlockInfo {
-            int uvx;
-            int uvy;
+            std::map<std::string, std::pair<int, int>> textureCoords;
         };
 
         enum class BlockType {

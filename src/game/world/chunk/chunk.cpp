@@ -43,10 +43,6 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 // // get the block info
                 Block::BlockInfo blockInfo = Block::getBlockInfo(block.getType());
 
-                // // get the block's uv coordinates
-                int uvx = blockInfo.uvx;
-                int uvy = blockInfo.uvy;
-
                 std::unordered_map<std::string, bool> faceVisible;
 
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
@@ -113,8 +109,14 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // lets add the verticies and indicies for each face (remember that we must add the verticies in a clockwise order)
 
+                // Get the texture coordinates for the block
+                auto textureCoords = blockInfo.textureCoords;
+
                 // y+ face
                 if (faceVisible["y+"]) {
+                    int uvx = textureCoords["y+"].first;
+                    int uvy = textureCoords["y+"].second;
+
                     GLfloat f_verticies[12] = {
                         x, y, z,
                         x + 1, y, z,
@@ -142,6 +144,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 }
 
                 if (faceVisible["y-"]) {
+                    int uvx = textureCoords["y-"].first;
+                    int uvy = textureCoords["y-"].second;
+
                     GLfloat f_verticies[12] = {
                         x, y - 1, z,
                         x + 1, y - 1, z,
@@ -170,6 +175,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // x+ face
                 if (faceVisible["x+"]) {
+                    int uvx = textureCoords["x+"].first;
+                    int uvy = textureCoords["x+"].second;
+
                     GLfloat f_verticies[12] = {
                         1 + x, y, z,
                         1 + x, y, z + 1,
@@ -183,10 +191,10 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     };
 
                     GLfloat f_uvs[] = {
+                        uvx + 1, uvy,
                         uvx, uvy,
                         uvx, uvy + 1,
                         uvx + 1, uvy + 1,
-                        uvx + 1, uvy
                     };
 
                     verticies.insert(verticies.end(), f_verticies, f_verticies + 12);
@@ -197,6 +205,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 }
 
                 if (faceVisible["x-"]) {
+                    int uvx = textureCoords["x-"].first;
+                    int uvy = textureCoords["x-"].second;
+
                     GLfloat f_verticies[12] = {
                         x , y, z,
                         x, y, z + 1,
@@ -210,10 +221,10 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     };
 
                     GLfloat f_uvs[] = {
+                        uvx + 1, uvy,
                         uvx, uvy,
                         uvx, uvy + 1,
                         uvx + 1, uvy + 1,
-                        uvx + 1, uvy
                     };
 
                     verticies.insert(verticies.end(), f_verticies, f_verticies + 12);
@@ -225,6 +236,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // z+ face
                 if (faceVisible["z+"]) {
+                    int uvx = textureCoords["z+"].first;
+                    int uvy = textureCoords["z+"].second;
+
                     GLfloat f_verticies[12] = {
                         x, y, z + 1,
                         x + 1, y, z + 1,
@@ -241,7 +255,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         uvx, uvy,
                         uvx + 1, uvy,
                         uvx + 1, uvy + 1,
-                        uvx, uvy + 1
+                        uvx, uvy + 1,
                     };
 
                     verticies.insert(verticies.end(), f_verticies, f_verticies + 12);
@@ -252,6 +266,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 }
 
                 if (faceVisible["z-"]) {
+                    int uvx = textureCoords["z-"].first;
+                    int uvy = textureCoords["z-"].second;
+
                     GLfloat f_verticies[12] = {
                         x, y, z,
                         x + 1, y, z,
@@ -268,7 +285,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         uvx, uvy,
                         uvx + 1, uvy,
                         uvx + 1, uvy + 1,
-                        uvx, uvy + 1
+                        uvx, uvy + 1,
                     };
 
                     verticies.insert(verticies.end(), f_verticies, f_verticies + 12);
