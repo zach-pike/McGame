@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 // Include GLEW. Always include it before gl.h and glfw3.h, since it's a bit magic.
 #include <GL/glew.h>
@@ -164,11 +165,14 @@ void Game::run() {
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_FRONT);
 
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
+
+    // Show wireframe
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     do {
         // Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.

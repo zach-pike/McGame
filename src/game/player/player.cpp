@@ -78,5 +78,7 @@ void Player::update(GLFWwindow* window) {
         this->position += this->camera.getRightVector() * 0.1f;
     }
 
+    // Print the player position
+    // std::cout << "Player position: " << this->position.x << ", " << this->position.y << ", " << this->position.z << std::endl;
 
 }
