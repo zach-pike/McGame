@@ -34,6 +34,8 @@ Game::~Game() {
 
 void Game::setFov(float fov) {
     this->fov = fov;
+
+    recalculateMvpMatrix();
 }
 
 float Game::getFov() {
@@ -118,13 +120,7 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    World world;
-
-    for (int x = 0; x < 2; x++) {
-        for (int z = 0; z < 2; z++) {
-            world.addChunk(Chunk(world, x, z));
-        }
-    }
+    World world(2, 2);
 
     // Set up our buffers
     std::vector<GLfloat> verticies;

@@ -7,12 +7,16 @@
 #include <map>
 
 #include "game/world/chunk/chunk.hpp"
+
+class Game;
 class World {
     private:
         std::map<std::pair<int, int>, Chunk> chunks;
+        const int chunk_x_count;
+        const int chunk_z_count;
 
     public:
-        World();
+        World(int chunk_x_count, int chunk_z_count);
         ~World();
 
         void addChunk(Chunk chunk);

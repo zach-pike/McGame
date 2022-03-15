@@ -1,8 +1,14 @@
 #include "world.hpp"
 
 // World constructor
-World::World() {
-
+World::World(int chunk_x_count, int chunk_z_count)
+    : chunk_x_count(chunk_x_count), chunk_z_count(chunk_z_count) {
+    // Initialise the world
+    for (int x = 0; x < chunk_x_count; x++) {
+        for (int z = 0; z < chunk_z_count; z++) {
+            addChunk(Chunk(*this, x, z));
+        }
+    }
 }
 
 // World destructor

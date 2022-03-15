@@ -14,7 +14,7 @@ class Game {
         float fov = 70.0f;
 
         GLFWwindow* window;
-        World world;
+        // World world;
 
         glm::mat4 projectionMatrix;
         glm::mat4 viewMatrix;
