@@ -39,6 +39,9 @@ class Game {
 
         void setWindowSize(int width, int height);
         int getWindowWidth();
+        int getWindowHeight();
+
+        GLFWwindow* getWindow();
 
         void run();
 };

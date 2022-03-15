@@ -62,8 +62,6 @@ void Game::setModelMatrix(glm::mat4 modelMatrix) {
     recalculateMvpMatrix();
 }
 
-
-
 // Game run function
 void Game::run() {
     // Initialise GLFW
@@ -120,7 +118,7 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    Chunk chunk;
+    Chunk chunk(1, 0);
 
     // Set up our buffers
     std::vector<GLfloat> verticies;
@@ -231,7 +229,7 @@ void Game::run() {
         glfwPollEvents();
 
         // Update the player
-        player.update(window);
+        player.update();
 
         // Camera matrix
         setViewMatrix(glm::lookAt(
@@ -242,4 +240,16 @@ void Game::run() {
 
     } // Check if the ESC key was pressed or the window was closed
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 );
+}
+
+GLFWwindow* Game::getWindow() {
+    return window;
+}
+
+int Game::getWindowWidth() {
+    return windowWidth;
+}
+
+int Game::getWindowHeight() {
+    return windowHeight;
 }

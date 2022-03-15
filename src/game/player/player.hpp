@@ -11,7 +11,7 @@ class Player {
     private:
         Camera camera;
         glm::vec3 position;
-        glm::vec2 oldMousePos;
+        Game& gameobj;
 
     public:
         Camera& getCamera();
@@ -19,7 +19,7 @@ class Player {
 
         void setPosition(glm::vec3 position);
 
-        void update(GLFWwindow* window);
+        void update();
 
         Player(Game& game);
         ~Player();

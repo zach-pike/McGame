@@ -8,9 +8,9 @@
 #include <cmath>
 
 // Player constructor
-Player::Player(Game& game) {
+Player::Player(Game& game): gameobj(game) {
     this->camera = Camera();
-    this->position = glm::vec3(4.0f, 3.0f, 3.0f);
+    this->position = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 // Player destructor
@@ -33,17 +33,16 @@ void Player::setPosition(glm::vec3 position) {
     this->position = position;
 }
 
-void Player::update(GLFWwindow* window) {
+void Player::update() {
     // Get the cursor position
     double xpos, ypos;
-    glfwGetCursorPos(window, &xpos, &ypos);
+    glfwGetCursorPos(gameobj.getWindow(), &xpos, &ypos);
 
-    // Get the size of the window
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
+    int width = gameobj.getWindowWidth();
+    int height = gameobj.getWindowHeight();
 
     // Reset the cursor position
-    glfwSetCursorPos(window, width/2, height/2);
+    glfwSetCursorPos(gameobj.getWindow(), width/2, height/2);
 
     xpos -= width/2;
     ypos -= height/2;
@@ -68,13 +67,13 @@ void Player::update(GLFWwindow* window) {
     // Now check for movement
     
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
         this->position += this->camera.getLookVector() * 0.1f;
-    } else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
         this->position -= this->camera.getLookVector() * 0.1f;
-    } else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
         this->position -= this->camera.getRightVector() * 0.1f;
-    } else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
         this->position += this->camera.getRightVector() * 0.1f;
     }
 

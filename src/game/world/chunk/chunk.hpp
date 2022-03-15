@@ -16,9 +16,11 @@
 class Chunk {
     private:
         std::array<Block, CHUNK_SIZE> blocks;
+        glm::vec3 position;
+
 
     public:
-        Chunk();
+        Chunk(int xoffset, int zoffset);
         ~Chunk();
 
         void setBlock(int x, int y, int z, Block block);
