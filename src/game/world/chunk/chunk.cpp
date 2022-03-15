@@ -2,17 +2,21 @@
 
 #include <string>
 #include <unordered_map>
+#include <iostream>
+
+#include "game/world/world.hpp"
 
 // Chunk constructor
-Chunk::Chunk(int xoffset, int zoffset) {
-    this->position = glm::vec3(xoffset, 0.0f, zoffset);
-
-    blocks.fill(Block(Block::BlockType::AIR));
+Chunk::Chunk(World& world, int xoffset, int zoffset): 
+    world(world),
+    xoffset(xoffset * CHUNK_X_SIZE),
+    zoffset(zoffset * CHUNK_Z_SIZE)
+{
 
     for (int x = 0; x < CHUNK_X_SIZE; x++) {
         for (int z = 0; z < CHUNK_Z_SIZE; z ++) {
             for (int y = 0; y < 1; y++) {
-                setBlock(x, y, z, Block(Block::BlockType::GRASS));
+                setBlock(x, y, z, Block(Block::BlockType::DIRT));
             }
         }
     }
@@ -24,17 +28,16 @@ void Chunk::setBlock(int x, int y, int z, Block block) {
 }
 
 // getBlock function
-Block Chunk::getBlock(int x, int y, int z) {
+Block Chunk::getBlock(int x, int y, int z) const {
     return blocks[x + y * CHUNK_X_SIZE + z * CHUNK_X_SIZE * CHUNK_Y_SIZE];
 }
 
 // generateMesh function
-void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs) {
-    int n_of_verticies = 0;
+void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs, GLuint& verticies_c) const {
     //Loop through all the blocks in the chunk
-    for (int y = 0; y < CHUNK_Y_SIZE; y++) {
-         for (int x = 0; x < CHUNK_X_SIZE; x++) {
-            for (int z = 0; z < CHUNK_Z_SIZE; z++) {
+    for (GLfloat y = 0; y < CHUNK_Y_SIZE; y++) {
+         for (GLfloat x = 0; x < CHUNK_X_SIZE; x++) {
+            for (GLfloat z = 0; z < CHUNK_Z_SIZE; z++) {
 
                 // get the block
                 Block block = getBlock(x, y, z);
@@ -46,6 +49,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 Block::BlockInfo blockInfo = Block::getBlockInfo(block.getType());
 
                 std::unordered_map<std::string, bool> faceVisible;
+
 
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
@@ -116,19 +120,19 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // y+ face
                 if (faceVisible["y+"]) {
-                    int uvx = textureCoords["y+"].first;
-                    int uvy = textureCoords["y+"].second;
+                    GLfloat uvx = textureCoords["y+"].first;
+                    GLfloat uvy = textureCoords["y+"].second;
 
                     GLfloat f_verticies[12] = {
-                        x +     position.x,    y, z +     position.z,
-                        x + 1 + position.x,    y, z +     position.z,
-                        x + 1 + position.x,    y, z + 1 + position.z,
-                        x +     position.x,    y, z + 1 + position.z
+                        x +     xoffset, y, z +     zoffset,
+                        x + 1 + xoffset, y, z +     zoffset,
+                        x + 1 + xoffset, y, z + 1 + zoffset,
+                        x +     xoffset, y, z + 1 + zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -142,23 +146,23 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
 
                 if (faceVisible["y-"]) {
-                    int uvx = textureCoords["y-"].first;
-                    int uvy = textureCoords["y-"].second;
+                    GLfloat uvx = textureCoords["y-"].first;
+                    GLfloat uvy = textureCoords["y-"].second;
 
                     GLfloat f_verticies[12] = {
-                        x +     position.x, y - 1, z +     position.z,
-                        x + 1 + position.x, y - 1, z +     position.z,
-                        x + 1 + position.x, y - 1, z + 1 + position.z,
-                        x +     position.x, y - 1, z + 1 + position.z
+                        x +     xoffset, y - 1, z +     zoffset,
+                        x + 1 + xoffset, y - 1, z +     zoffset,
+                        x + 1 + xoffset, y - 1, z + 1 + zoffset,
+                        x +     xoffset, y - 1, z + 1 + zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -172,24 +176,24 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
 
                 // x+ face
                 if (faceVisible["x+"]) {
-                    int uvx = textureCoords["x+"].first;
-                    int uvy = textureCoords["x+"].second;
+                    GLfloat uvx = textureCoords["x+"].first;
+                    GLfloat uvy = textureCoords["x+"].second;
 
                     GLfloat f_verticies[12] = {
-                        x + 1 + position.x, y,     z +     position.z,
-                        x + 1 + position.x, y,     z + 1 + position.z,
-                        x + 1 + position.x, y - 1, z + 1 + position.z,
-                        x + 1 + position.x, y - 1, z +     position.z
+                        x + 1 + xoffset, y,     z +     zoffset,
+                        x + 1 + xoffset, y,     z + 1 + zoffset,
+                        x + 1 + xoffset, y - 1, z + 1 + zoffset,
+                        x + 1 + xoffset, y - 1, z +     zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -203,23 +207,23 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
 
                 if (faceVisible["x-"]) {
-                    int uvx = textureCoords["x-"].first;
-                    int uvy = textureCoords["x-"].second;
+                    GLfloat uvx = textureCoords["x-"].first;
+                    GLfloat uvy = textureCoords["x-"].second;
 
                     GLfloat f_verticies[12] = {
-                        x + position.x, y,     z +     position.z,
-                        x + position.x, y,     z + 1 + position.z,
-                        x + position.x, y - 1, z + 1 + position.z,
-                        x + position.x, y - 1, z +     position.z
+                        x + xoffset, y,     z +     zoffset,
+                        x + xoffset, y,     z + 1 + zoffset,
+                        x + xoffset, y - 1, z + 1 + zoffset,
+                        x + xoffset, y - 1, z +     zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -233,24 +237,24 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
 
                 // z+ face
                 if (faceVisible["z+"]) {
-                    int uvx = textureCoords["z+"].first;
-                    int uvy = textureCoords["z+"].second;
+                    GLfloat uvx = textureCoords["z+"].first;
+                    GLfloat uvy = textureCoords["z+"].second;
 
                     GLfloat f_verticies[12] = {
-                        x +     position.x, y,      z + 1 + position.z,
-                        x + 1 + position.x, y,      z + 1 + position.z,
-                        x + 1 + position.x, y - 1,  z + 1 + position.z,
-                        x +     position.x, y - 1 , z + 1 + position.z
+                        x +     xoffset, y,      z + 1 + zoffset,
+                        x + 1 + xoffset, y,      z + 1 + zoffset,
+                        x + 1 + xoffset, y - 1,  z + 1 + zoffset,
+                        x +     xoffset, y - 1 , z + 1 + zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -264,23 +268,23 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
 
                 if (faceVisible["z-"]) {
-                    int uvx = textureCoords["z-"].first;
-                    int uvy = textureCoords["z-"].second;
+                    GLfloat uvx = textureCoords["z-"].first;
+                    GLfloat uvy = textureCoords["z-"].second;
 
                     GLfloat f_verticies[12] = {
-                        x +     position.x, y,     z + position.z,
-                        x + 1 + position.x, y,     z + position.z,
-                        x + 1 + position.x, y - 1, z + position.z,
-                        x +     position.x, y - 1, z + position.z
+                        x +     xoffset, y,     z + zoffset,
+                        x + 1 + xoffset, y,     z + zoffset,
+                        x + 1 + xoffset, y - 1, z + zoffset,
+                        x +     xoffset, y - 1, z + zoffset
                     };
 
                     GLuint f_indicies[] = {
-                        n_of_verticies + 0, n_of_verticies + 1, n_of_verticies + 2,
-                        n_of_verticies + 2, n_of_verticies + 3, n_of_verticies + 0
+                        verticies_c + 0, verticies_c + 1, verticies_c + 2,
+                        verticies_c + 2, verticies_c + 3, verticies_c + 0
                     };
 
                     GLfloat f_uvs[] = {
@@ -294,7 +298,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     indicies.insert(indicies.end(), f_indicies, f_indicies + 6);
                     uvs.insert(uvs.end(), f_uvs, f_uvs + 8);
 
-                    n_of_verticies += 4;
+                    verticies_c += 4;
                 }
             }
         }
@@ -303,4 +307,9 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
 // Chunk destructor
 Chunk::~Chunk() {
+
+}
+
+std::pair<int, int> Chunk::getPosition() const {
+    return std::pair(xoffset, zoffset);
 }

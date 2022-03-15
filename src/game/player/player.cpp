@@ -78,6 +78,6 @@ void Player::update() {
     }
 
     // Print the player position
-    std::cout << "Player position: " << this->position.x << ", " << this->position.y << ", " << this->position.z << std::endl;
+    // std::cout << "Player position: " << this->position.x << ", " << this->position.y << ", " << this->position.z << std::endl;
 
 }

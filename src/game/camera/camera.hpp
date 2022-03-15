@@ -5,8 +5,8 @@
 class Camera {
     private:
         glm::vec3 lookvector;
-        double pitch;
-        double yaw;
+        double pitch = 0;
+        double yaw = 0;
 
     public:
         Camera();
@@ -18,7 +18,4 @@ class Camera {
 
         glm::vec2 getPitchYaw();
         void setPitchYaw(glm::vec2 rotation);
-
-
-
 };

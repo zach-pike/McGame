@@ -18,7 +18,9 @@ class World {
         void addChunk(Chunk chunk);
 
         void setBlock(int x, int y, int z, Block block);
-        Block getBlock(int x, int y, int z);
+        Block getBlock(int x, int y, int z) const;
 
-        void generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs);
+        bool isCoordInWorld(int x, int y, int z) const;
+
+        void generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs) const;
 };

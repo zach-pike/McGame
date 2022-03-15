@@ -17,7 +17,7 @@ Block::BlockType Block::getType() {
     return this->type;
 }
 
-inline std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> getTextureCoords() {
+std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> getTextureCoords() {
     std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> textureCoords;
 
     // Grass
@@ -27,6 +27,22 @@ inline std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> ge
     textureCoords[Block::BlockType::GRASS]["x-"] = std::make_pair(3, 0);
     textureCoords[Block::BlockType::GRASS]["z+"] = std::make_pair(3, 0);
     textureCoords[Block::BlockType::GRASS]["z-"] = std::make_pair(3, 0);
+
+    // Dirt
+    textureCoords[Block::BlockType::DIRT]["y+"] = std::make_pair(2, 0);
+    textureCoords[Block::BlockType::DIRT]["y-"] = std::make_pair(2, 0);
+    textureCoords[Block::BlockType::DIRT]["x+"] = std::make_pair(2, 0);
+    textureCoords[Block::BlockType::DIRT]["x-"] = std::make_pair(2, 0);
+    textureCoords[Block::BlockType::DIRT]["z+"] = std::make_pair(2, 0);
+    textureCoords[Block::BlockType::DIRT]["z-"] = std::make_pair(2, 0);
+
+    // Stone
+    textureCoords[Block::BlockType::STONE]["y+"] = std::make_pair(1, 0);
+    textureCoords[Block::BlockType::STONE]["y-"] = std::make_pair(1, 0);
+    textureCoords[Block::BlockType::STONE]["x+"] = std::make_pair(1, 0);
+    textureCoords[Block::BlockType::STONE]["x-"] = std::make_pair(1, 0);
+    textureCoords[Block::BlockType::STONE]["z+"] = std::make_pair(1, 0);
+    textureCoords[Block::BlockType::STONE]["z-"] = std::make_pair(1, 0);
 
     return textureCoords;
 }

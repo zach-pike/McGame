@@ -118,14 +118,21 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    Chunk chunk(1, 0);
+    World world;
+
+    for (int x = 0; x < 2; x++) {
+        for (int z = 0; z < 2; z++) {
+            world.addChunk(Chunk(world, x, z));
+        }
+    }
 
     // Set up our buffers
     std::vector<GLfloat> verticies;
     std::vector<GLuint> indicies;
     std::vector<GLfloat> uvs;
 
-    chunk.generateMesh(verticies, indicies, uvs);
+    // Generate the world
+    world.generateMesh(verticies, indicies, uvs);
 
     // Load the texture and set it up
     GLuint Texture = LoadBMP("src/textures/Chunk.bmp");
