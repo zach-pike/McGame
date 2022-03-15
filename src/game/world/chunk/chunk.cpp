@@ -53,15 +53,45 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
+                auto directionHelper = [&](glm::vec3 direction, std::string name) {
+                    // if the value is within the chunk then check if the block is air
+                    if (x + direction.x >= 0 && x + direction.x < CHUNK_X_SIZE && y + direction.y >= 0 && y + direction.y < CHUNK_Y_SIZE && z + direction.z >= 0 && z + direction.z < CHUNK_Z_SIZE) {
+                        Block block = getBlock(x + direction.x, y + direction.y, z + direction.z);
+                        if (block.getType() == Block::BlockType::AIR) {
+                            faceVisible[name] = true;
+                        } else {
+                            faceVisible[name] = false;
+                        }
+                    } 
+                    // if the value is outside the chunk then check if the coordinates are in the world if they are not the 
+                    // face is visible
+                    else if (!world.isCoordInWorld(x + direction.x + xoffset, y + direction.y, z + direction.z + zoffset)) {
+                        faceVisible[name] = true;
+                    }
+
+                    // if the block coordinates are valid then check the correct neighbouring chunk
+                    else {
+                        Chunk chunk = world.getChunk((xoffset / CHUNK_X_SIZE) + direction.x, (zoffset / CHUNK_Z_SIZE) + direction.z);
+                        Block block = chunk.getBlock(x + direction.x, y + direction.y, z + direction.z);
+                        if (block.getType() == Block::BlockType::AIR) {
+                            faceVisible[name] = true;
+                        } else {
+                            faceVisible[name] = false;
+                        }
+                    }
+                };
+
+
                 // check the x+ direction
                 if (x + 1 < CHUNK_X_SIZE) {
-                    Block block = getBlock(x + 1, y, z);
-                    if (block.getType() == Block::BlockType::AIR) {
+                    Block block_x_plus = getBlock(x + 1, y, z);
+                    if (block_x_plus.getType() == Block::BlockType::AIR) {
                         faceVisible["x+"] = true;
                     }
                 } else {
                     faceVisible["x+"] = true;
                 }
+                
 
                 // check the x- direction
                 if (x - 1 >= 0) {

@@ -68,3 +68,7 @@ void World::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
         chunk.second.generateMesh(verticies, indicies, uvs, verticies_c);
     }
 }
+
+Chunk World::getChunk(int x, int z) const {
+    return this->chunks.at(std::pair<int, int>(x, z));
+}

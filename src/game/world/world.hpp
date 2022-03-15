@@ -16,6 +16,7 @@ class World {
         ~World();
 
         void addChunk(Chunk chunk);
+        Chunk getChunk(int x, int z) const;
 
         void setBlock(int x, int y, int z, Block block);
         Block getBlock(int x, int y, int z) const;
