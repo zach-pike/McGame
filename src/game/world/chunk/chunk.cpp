@@ -1,7 +1,7 @@
 #include "chunk.hpp"
 
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <iostream>
 
 #include "game/world/world.hpp"
@@ -48,13 +48,12 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 // // get the block info
                 Block::BlockInfo blockInfo = Block::getBlockInfo(block.getType());
 
-                std::unordered_map<std::string, bool> faceVisible;
-
-
+                std::map<std::string, bool> faceVisible;
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
                 auto directionHelper = [&](glm::vec3 direction, std::string name) {
-                    // To be fixed in next commit  
+                    // To be fixed in next commit
+
                 };
 
 
