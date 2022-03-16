@@ -58,7 +58,6 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
                 auto directionHelper = [&](glm::vec3 direction, std::string name) {
-                    // To be fixed in next commit
                     //if block is in this chunk and the block is not air draw the face
                     int xtocheck = x + direction.x;
                     int ytocheck = y + direction.y;
