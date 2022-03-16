@@ -78,6 +78,8 @@ void Player::update() {
     }
 
     // Print the player position
-    // std::cout << "Player position: " << this->position.x << ", " << this->position.y << ", " << this->position.z << std::endl;
+    if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_P) == GLFW_PRESS) {
+        std::cout << "Player position: " << this->position.x << ", " << this->position.y << ", " << this->position.z << std::endl;
+    }
 
 }

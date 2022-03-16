@@ -29,7 +29,7 @@ void World::setBlock(int x, int y, int z, Block block) {
 
     std::pair<int, int> position = std::pair<int, int>(chunkx, chunkz);
 
-    if (this->chunks.find(position) == this->chunks.end()) {
+    if (this->chunks.find(position) != this->chunks.end()) {
         this->chunks.at(position).setBlock(xoffset, y, zoffset, block);
     }
 }
@@ -76,5 +76,10 @@ void World::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 }
 
 Chunk World::getChunk(int x, int z) const {
-    return this->chunks.at(std::pair<int, int>(x, z));
+    return chunks.at(std::pair<int, int>(x, z));
+}
+
+// Get world size
+std::pair<int, int> World::getWorldSize() const {
+    return std::pair<int, int>(this->chunk_x_count, this->chunk_z_count);
 }

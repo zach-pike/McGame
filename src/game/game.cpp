@@ -120,7 +120,13 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    World world(2, 2);
+
+    World world(4, 4);
+    for (int x = 0; x < 64; x++) {
+        world.setBlock(x, 0, x, Block(Block::BlockType::STONE));
+    }
+
+    // world.getChunk(0, 1);
 
     // Set up our buffers
     std::vector<GLfloat> verticies;

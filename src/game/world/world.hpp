@@ -28,4 +28,6 @@ class World {
         bool isCoordInWorld(int x, int y, int z) const;
 
         void generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs) const;
+
+        std::pair<int, int> getWorldSize() const;
 };

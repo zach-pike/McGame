@@ -32,6 +32,12 @@ Block Chunk::getBlock(int x, int y, int z) const {
     return blocks[x + y * CHUNK_X_SIZE + z * CHUNK_X_SIZE * CHUNK_Y_SIZE];
 }
 
+template<typename T>
+inline T Mod(T a, T b) {
+    T ret = a % b;
+    return ret >= 0 ? ret : ret + b;
+}
+
 // generateMesh function
 void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& indicies, std::vector<GLfloat>& uvs, GLuint& verticies_c) const {
     //Loop through all the blocks in the chunk
@@ -53,7 +59,45 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 auto directionHelper = [&](glm::vec3 direction, std::string name) {
                     // To be fixed in next commit
+                    //if block is in this chunk and the block is not air draw the face
+                    int xtocheck = x + direction.x;
+                    int ytocheck = y + direction.y;
+                    int ztocheck = z + direction.z;
+                    
+                    if (xtocheck >= 0 && xtocheck < CHUNK_X_SIZE && ytocheck >= 0 && ytocheck < CHUNK_Y_SIZE && ztocheck >= 0 && ztocheck < CHUNK_Z_SIZE) {
+                        Block blockToCheck = getBlock(xtocheck, ytocheck, ztocheck);
+                        if (blockToCheck.getType() == Block::BlockType::AIR) {
+                            faceVisible[name] = true;
+                        } else {
+                            faceVisible[name] = false;
+                        }
+                    } else {
+                        if (ytocheck < 0 || ytocheck >= CHUNK_Y_SIZE) {
+                            faceVisible[name] = true;
+                            return;
+                        }
 
+                        int chunkx = xoffset + direction.x;
+                        int chunkz = zoffset + direction.z;
+
+                        auto worldSize = world.getWorldSize();
+
+                        if (chunkx < 0 || chunkx >= worldSize.first || chunkz < 0 || chunkz >= worldSize.second) {
+                            faceVisible[name] = true;
+                            return;
+                        }
+
+                        int blockX = Mod(xtocheck, CHUNK_X_SIZE);
+                        int blockZ = Mod(ztocheck, CHUNK_Z_SIZE);
+
+                        Block block = world.getChunk(chunkx, chunkz).getBlock(blockX, ytocheck, blockZ);
+
+                        if (block.getType() == Block::BlockType::AIR) {
+                            faceVisible[name] = true;
+                        } else {
+                            faceVisible[name] = false;
+                        }
+                    }
                 };
 
 
@@ -217,5 +261,5 @@ Chunk::~Chunk() {
 }
 
 std::pair<int, int> Chunk::getPosition() const {
-    return std::pair(xoffset * CHUNK_X_SIZE, zoffset * CHUNK_Z_SIZE);
+    return std::pair(xoffset, zoffset);
 }
