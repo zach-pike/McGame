@@ -44,7 +44,6 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
     for (GLfloat y = 0; y < CHUNK_Y_SIZE; y++) {
          for (GLfloat x = 0; x < CHUNK_X_SIZE; x++) {
             for (GLfloat z = 0; z < CHUNK_Z_SIZE; z++) {
-
                 // get the block
                 Block block = getBlock(x, y, z);
 
@@ -57,7 +56,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                 std::map<std::string, bool> faceVisible;
                 // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
-                auto directionHelper = [&](glm::vec3 direction, std::string name) {
+                auto directionHelper = [&](glm::vec3 direction) {
                     //if block is in this chunk and the block is not air draw the face
                     int xtocheck = x + direction.x;
                     int ytocheck = y + direction.y;
@@ -66,63 +65,61 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     if (xtocheck >= 0 && xtocheck < CHUNK_X_SIZE && ytocheck >= 0 && ytocheck < CHUNK_Y_SIZE && ztocheck >= 0 && ztocheck < CHUNK_Z_SIZE) {
                         Block blockToCheck = getBlock(xtocheck, ytocheck, ztocheck);
                         if (blockToCheck.getType() == Block::BlockType::AIR) {
-                            faceVisible[name] = true;
+                            return true;
                         } else {
-                            faceVisible[name] = false;
+                            return false;
                         }
                     } else {
+                        // If block is lower or higher than the world assume it is visible
                         if (ytocheck < 0 || ytocheck >= CHUNK_Y_SIZE) {
-                            faceVisible[name] = true;
-                            return;
+                            return true;
                         }
 
+                        // Get the chunk offset
                         int chunkx = xoffset + direction.x;
                         int chunkz = zoffset + direction.z;
 
+                        // Get the world dimensions in chunks
                         auto worldSize = world.getWorldSize();
 
+                        // If the desired chunk is outside the world assume it is visible
                         if (chunkx < 0 || chunkx >= worldSize.first || chunkz < 0 || chunkz >= worldSize.second) {
-                            faceVisible[name] = true;
-                            return;
+                            return true;
                         }
 
+                        // Get the block x and z position in the chunk
                         int blockX = Mod(xtocheck, CHUNK_X_SIZE);
                         int blockZ = Mod(ztocheck, CHUNK_Z_SIZE);
 
+                        // Get the chunk
                         Block block = world.getChunk(chunkx, chunkz).getBlock(blockX, ytocheck, blockZ);
 
+                        // If the block is air assume it is visible
                         if (block.getType() == Block::BlockType::AIR) {
-                            faceVisible[name] = true;
+                            return true;
                         } else {
-                            faceVisible[name] = false;
+                            return false;
                         }
                     }
                 };
 
-
-                directionHelper(glm::vec3(1, 0, 0), "x+");
-                directionHelper(glm::vec3(-1, 0, 0), "x-");
-                directionHelper(glm::vec3(0, 1, 0), "y+");
-                directionHelper(glm::vec3(0, -1, 0), "y-");
-                directionHelper(glm::vec3(0, 0, 1), "z+");
-                directionHelper(glm::vec3(0, 0, -1), "z-");
-
+                // Vertex position offsets
                 int xblockoffset = xoffset * CHUNK_X_SIZE;
                 int zblockoffset = zoffset * CHUNK_Z_SIZE;
 
                 // Get the texture coordinates for the block
                 auto textureCoords = blockInfo.textureCoords;
 
+                // For block generation
                 auto arrayHelper = [&](std::vector<GLfloat> f_verticies, std::vector<GLfloat> f_uvs, std::vector<GLuint> f_indicies) {
                     verticies.insert(verticies.end(), f_verticies.begin(), f_verticies.end());
                     indicies.insert(indicies.end(), f_indicies.begin(), f_indicies.end());
                     uvs.insert(uvs.end(), f_uvs.begin(), f_uvs.end());
-
                     verticies_c += 4;
                 };
 
                 // y+ face
-                if (faceVisible["y+"]) {
+                if (directionHelper(glm::vec3(0, 1, 0))) {
                     GLfloat uvx = textureCoords["y+"].first;
                     GLfloat uvy = textureCoords["y+"].second;
 
@@ -143,7 +140,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         verticies_c + 2, verticies_c + 3, verticies_c + 0
                     });
                 }
-                if (faceVisible["y-"]) {
+                if (directionHelper(glm::vec3(0, -1, 0))) {
                     GLfloat uvx = textureCoords["y-"].first;
                     GLfloat uvy = textureCoords["y-"].second;
 
@@ -164,7 +161,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         verticies_c + 2, verticies_c + 3, verticies_c + 0
                     });
                 }
-                if (faceVisible["x+"]) {
+                if (directionHelper(glm::vec3(1, 0, 0))) {
                     GLfloat uvx = textureCoords["x+"].first;
                     GLfloat uvy = textureCoords["x+"].second;
 
@@ -185,7 +182,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         verticies_c + 2, verticies_c + 3, verticies_c + 0
                     });
                 }
-                if (faceVisible["x-"]) {
+                if (directionHelper(glm::vec3(-1, 0, 0))) {
                     GLfloat uvx = textureCoords["x-"].first;
                     GLfloat uvy = textureCoords["x-"].second;
 
@@ -206,7 +203,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                         verticies_c + 2, verticies_c + 3, verticies_c + 0
                     });
                 }
-                if (faceVisible["z+"]) {
+                if (directionHelper(glm::vec3(0, 0, 1))) {
                     GLfloat uvx = textureCoords["z+"].first;
                     GLfloat uvy = textureCoords["z+"].second;
 
@@ -228,7 +225,7 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     });
                 }
 
-                if (faceVisible["z-"]) {
+                if (directionHelper(glm::vec3(0, 0, -1))) {
                     GLfloat uvx = textureCoords["z-"].first;
                     GLfloat uvy = textureCoords["z-"].second;
 
