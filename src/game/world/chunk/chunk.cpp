@@ -13,13 +13,13 @@ Chunk::Chunk(World& world, int xoffset, int zoffset):
     zoffset(zoffset)
 {
 
-    for (int x = 0; x < CHUNK_X_SIZE; x++) {
-        for (int z = 0; z < CHUNK_Z_SIZE; z ++) {
-            for (int y = 0; y < 1; y++) {
-                setBlock(x, y, z, Block(Block::BlockType::DIRT));
-            }
-        }
-    }
+    // for (int x = 0; x < CHUNK_X_SIZE; x++) {
+    //     for (int z = 0; z < CHUNK_Z_SIZE; z ++) {
+    //         for (int y = 0; y < 1; y++) {
+    //             setBlock(x, y, z, Block(Block::BlockType::GRASS));
+    //         }
+    //     }
+    // }
 }
 
 // setBlock function
@@ -52,9 +52,6 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
 
                 // // get the block info
                 Block::BlockInfo blockInfo = Block::getBlockInfo(block.getType());
-
-                std::map<std::string, bool> faceVisible;
-                // check in every direction if the block is visible if the incremented value is less than 0 or greater than CHUNK_X_SIZE or CHUNK_Y_SIZE or CHUNK_Z_SIZE assume it is visible
 
                 auto directionHelper = [&](glm::vec3 direction) {
                     //if block is in this chunk and the block is not air draw the face

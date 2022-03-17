@@ -12,6 +12,7 @@ class Player {
         Camera camera;
         glm::vec3 position;
         Game& gameobj;
+        float speed = 0.5f;
 
     public:
         Camera& getCamera();

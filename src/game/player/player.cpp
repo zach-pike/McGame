@@ -10,7 +10,7 @@
 // Player constructor
 Player::Player(Game& game): gameobj(game) {
     this->camera = Camera();
-    this->position = glm::vec3(0.0f, 1.0f, 0.0f);
+    this->position = glm::vec3(0.0f, 11.0f, 0.0f);
 }
 
 // Player destructor
@@ -68,13 +68,13 @@ void Player::update() {
     
 
     if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_W) == GLFW_PRESS) {
-        this->position += this->camera.getLookVector() * 0.1f;
+        this->position += this->camera.getLookVector() * speed;
     } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_S) == GLFW_PRESS) {
-        this->position -= this->camera.getLookVector() * 0.1f;
+        this->position -= this->camera.getLookVector() * speed;
     } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-        this->position -= this->camera.getRightVector() * 0.1f;
+        this->position -= this->camera.getRightVector() * speed;
     } else if (glfwGetKey(gameobj.getWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-        this->position += this->camera.getRightVector() * 0.1f;
+        this->position += this->camera.getRightVector() * speed;
     }
 
     // Print the player position

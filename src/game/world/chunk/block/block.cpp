@@ -64,6 +64,10 @@ Block::BlockInfo Block::getBlockInfo(BlockType blockType) {
             return BlockInfo{
                 .textureCoords = textureCoords[BlockType::STONE]
             };
+        case BlockType::DIRT:
+            return BlockInfo{
+                .textureCoords = textureCoords[BlockType::DIRT]
+            };
         default:
             return BlockInfo{
                 .textureCoords = textureCoords[BlockType::AIR]

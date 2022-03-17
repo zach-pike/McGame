@@ -1,5 +1,7 @@
 #include "world.hpp"
 
+#include "external/PerlinNoise.hpp"
+
 // World constructor
 World::World(int chunk_x_count, int chunk_z_count)
     : chunk_x_count(chunk_x_count), chunk_z_count(chunk_z_count) {
@@ -7,6 +9,27 @@ World::World(int chunk_x_count, int chunk_z_count)
     for (int x = 0; x < chunk_x_count; x++) {
         for (int z = 0; z < chunk_z_count; z++) {
             addChunk(Chunk(*this, x, z));
+        }
+    }
+
+    srand(time(NULL));
+
+    // Generate the world
+    const siv::PerlinNoise::seed_type seed = rand();
+
+	const siv::PerlinNoise perlin{ seed };
+
+    for (int x = 0; x < chunk_x_count * CHUNK_X_SIZE; x++) {
+        for (int z = 0; z < chunk_z_count * CHUNK_Z_SIZE; z++) {
+            double noise = perlin.octave2D_01((double)x * 0.01, (double)z * 0.01, 20);
+
+            int y = noise * 10;
+
+            for (int i = 0; i < y; i++) {
+                setBlock(x, i, z, Block::BlockType::DIRT);
+            }
+
+            setBlock(x, y, z, Block::BlockType::GRASS);
         }
     }
 }

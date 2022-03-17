@@ -120,11 +120,7 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-
-    World world(4, 4);
-    for (int x = 0; x < 64; x++) {
-        world.setBlock(x, 0, x, Block(Block::BlockType::STONE));
-    }
+    World world(20, 20);
 
     // world.getChunk(0, 1);
 
