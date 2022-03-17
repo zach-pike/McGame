@@ -133,10 +133,10 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     GLfloat uvy = textureCoords["y-"].second;
 
                     arrayHelper({
-                        x +     xblockoffset, y - 1, z +     zblockoffset,
                         x + 1 + xblockoffset, y - 1, z +     zblockoffset,
+                        x +     xblockoffset, y - 1, z +     zblockoffset,
+                        x +     xblockoffset, y - 1, z + 1 + zblockoffset,
                         x + 1 + xblockoffset, y - 1, z + 1 + zblockoffset,
-                        x +     xblockoffset, y - 1, z + 1 + zblockoffset
                     },
                     {
                         uvx, uvy,
@@ -154,16 +154,16 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     GLfloat uvy = textureCoords["x+"].second;
 
                     arrayHelper({
-                        x + 1 + xblockoffset, y,     z +     zblockoffset,
-                        x + 1 + xblockoffset, y,     z + 1 + zblockoffset,
                         x + 1 + xblockoffset, y - 1, z + 1 + zblockoffset,
-                        x + 1 + xblockoffset, y - 1, z +     zblockoffset
+                        x + 1 + xblockoffset, y,     z + 1 + zblockoffset,
+                        x + 1 + xblockoffset, y,     z +     zblockoffset,
+                        x + 1 + xblockoffset, y - 1, z +     zblockoffset,
                     },
                     {
+                        uvx + 1, uvy + 1,
                         uvx + 1, uvy,
                         uvx, uvy,
                         uvx, uvy + 1,
-                        uvx + 1, uvy + 1,
                     },
                     {
                         verticies_c + 0, verticies_c + 1, verticies_c + 2,
@@ -175,16 +175,16 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     GLfloat uvy = textureCoords["x-"].second;
 
                     arrayHelper({
+                        x + xblockoffset, y - 1, z +     zblockoffset,
                         x + xblockoffset, y,     z +     zblockoffset,
-                        x + xblockoffset, y,     z + 1 + zblockoffset,
+                        x + xblockoffset, y,     z + 1 + zblockoffset,                        
                         x + xblockoffset, y - 1, z + 1 + zblockoffset,
-                        x + xblockoffset, y - 1, z +     zblockoffset
                     },
                     {
+                        uvx + 1, uvy + 1,
                         uvx + 1, uvy,
                         uvx, uvy,
                         uvx, uvy + 1,
-                        uvx + 1, uvy + 1,
                     },
                     {
                         verticies_c + 0, verticies_c + 1, verticies_c + 2,
@@ -218,16 +218,17 @@ void Chunk::generateMesh(std::vector<GLfloat>& verticies, std::vector<GLuint>& i
                     GLfloat uvy = textureCoords["z-"].second;
 
                     arrayHelper({
-                        x +     xblockoffset, y,     z + zblockoffset,
-                        x + 1 + xblockoffset, y,     z + zblockoffset,
-                        x + 1 + xblockoffset, y - 1, z + zblockoffset,
-                        x +     xblockoffset, y - 1, z + zblockoffset
+                        
+                        x + 1 + xblockoffset, y - 1,  z +     zblockoffset,
+                        x + 1 + xblockoffset, y,      z +     zblockoffset,
+                        x +     xblockoffset, y,      z +     zblockoffset,
+                        x +     xblockoffset, y - 1 , z +     zblockoffset,
                     },
                     {
+                        uvx, uvy + 1,
                         uvx, uvy,
                         uvx + 1, uvy,
                         uvx + 1, uvy + 1,
-                        uvx, uvy + 1,
                     },
                     {
                         verticies_c + 0, verticies_c + 1, verticies_c + 2,

@@ -118,7 +118,7 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    World world(20, 20);
+    World world(5, 5);
 
     // Set up our buffers
     std::vector<GLfloat> verticies;
@@ -164,8 +164,8 @@ void Game::run() {
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_FRONT);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
