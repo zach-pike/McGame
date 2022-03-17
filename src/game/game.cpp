@@ -84,8 +84,6 @@ void Game::run() {
     // Create the window with glfw
     window = glfwCreateWindow( 900, 800, "Tutorial 01", NULL, NULL);
 
-    glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
-
     // If we failed to initialize glfw
     if(window == NULL) {
         fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
@@ -122,8 +120,6 @@ void Game::run() {
     Player player(*this);
     World world(20, 20);
 
-    // world.getChunk(0, 1);
-
     // Set up our buffers
     std::vector<GLfloat> verticies;
     std::vector<GLuint> indicies;
@@ -155,7 +151,7 @@ void Game::run() {
 
     GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
-    setProjectionMatrix(glm::perspective(glm::radians(fov), (float) windowWidth / (float)windowHeight, 0.1f, 100.0f));
+    setProjectionMatrix(glm::perspective(glm::radians(fov), (float) windowWidth / (float)windowHeight, near, far));
     setViewMatrix(glm::lookAt(
         player.getPosition(),
         player.getPosition() - player.getCamera().getLookVector(),
@@ -177,7 +173,25 @@ void Game::run() {
     // Show wireframe
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    int frameCount = 0;
+
     do {
+        // Every 5th frame, we will get the framebuffer size and update the projection matrix if it has changed
+        if (frameCount == 0) {
+            int width, height;
+            glfwGetFramebufferSize(window, &width, &height);
+            if (width != windowWidth || height != windowHeight) {
+                windowWidth = width;
+                windowHeight = height;
+                setProjectionMatrix(glm::perspective(glm::radians(fov), (float) windowWidth / (float)windowHeight, near, far));
+            
+                glViewport(0, 0, windowWidth, windowHeight);
+            }
+        }
+
+        frameCount = (frameCount + 1) % 60;
+
+
         // Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(1.0f, 1.0f, 1.0f, 0.3f);
