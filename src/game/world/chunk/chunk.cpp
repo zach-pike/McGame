@@ -11,16 +11,7 @@ Chunk::Chunk(World& world, int xoffset, int zoffset):
     world(world),
     xoffset(xoffset),
     zoffset(zoffset)
-{
-
-    // for (int x = 0; x < CHUNK_X_SIZE; x++) {
-    //     for (int z = 0; z < CHUNK_Z_SIZE; z ++) {
-    //         for (int y = 0; y < 1; y++) {
-    //             setBlock(x, y, z, Block(Block::BlockType::GRASS));
-    //         }
-    //     }
-    // }
-}
+{}
 
 // setBlock function
 void Chunk::setBlock(int x, int y, int z, Block block) {

@@ -11,6 +11,9 @@ class Game {
         int windowWidth;
         int windowHeight;
 
+        const float near = 0.1f;
+        const float far = 1000.0f;
+
         float fov = 70.0f;
 
         GLFWwindow* window;

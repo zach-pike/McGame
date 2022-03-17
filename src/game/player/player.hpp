@@ -13,6 +13,8 @@ class Player {
         glm::vec3 position;
         Game& gameobj;
         float speed = 0.5f;
+        bool mouse_locked = true;
+        bool mouse_locked_last = false;
 
     public:
         Camera& getCamera();
