@@ -15,13 +15,17 @@ World::World(int chunk_x_count, int chunk_z_count)
     srand(time(NULL));
 
     // Generate the world
-    const siv::PerlinNoise::seed_type seed = rand();
+    const siv::PerlinNoise::seed_type seed1 = rand();
+    const siv::PerlinNoise::seed_type seed2 = rand();
 
-	const siv::PerlinNoise perlin{ seed };
+	const siv::PerlinNoise perlin1{ seed1 };
+	const siv::PerlinNoise perlin2{ seed2 };
 
     for (int x = 0; x < chunk_x_count * CHUNK_X_SIZE; x++) {
         for (int z = 0; z < chunk_z_count * CHUNK_Z_SIZE; z++) {
-            double noise = perlin.octave2D_01((double)x * 0.01, (double)z * 0.01, 20);
+            double noise = 
+            perlin1.octave2D_01((double)x * 0.02, (double)z * 0.02, 20) + 
+            perlin2.octave2D_01((double)x * 0.02, (double)z * 0.02, 20);
 
             int y = noise * 10;
 

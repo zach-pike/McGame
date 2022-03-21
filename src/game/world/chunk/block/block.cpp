@@ -44,6 +44,14 @@ std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> getTextur
     textureCoords[Block::BlockType::STONE]["z+"] = std::make_pair(1, 0);
     textureCoords[Block::BlockType::STONE]["z-"] = std::make_pair(1, 0);
 
+    // Diamond ore
+    textureCoords[Block::BlockType::DIAMOND_ORE]["y+"] = std::make_pair(2, 3);
+    textureCoords[Block::BlockType::DIAMOND_ORE]["y-"] = std::make_pair(2, 3);
+    textureCoords[Block::BlockType::DIAMOND_ORE]["x+"] = std::make_pair(2, 3);
+    textureCoords[Block::BlockType::DIAMOND_ORE]["x-"] = std::make_pair(2, 3);
+    textureCoords[Block::BlockType::DIAMOND_ORE]["z+"] = std::make_pair(2, 3);
+    textureCoords[Block::BlockType::DIAMOND_ORE]["z-"] = std::make_pair(2, 3);
+
     return textureCoords;
 }
 
@@ -51,26 +59,7 @@ std::map<Block::BlockType, std::map<std::string, std::pair<int, int>>> getTextur
 Block::BlockInfo Block::getBlockInfo(BlockType blockType) {
     auto textureCoords = getTextureCoords();
 
-    switch (blockType) {
-        case BlockType::AIR:
-            return BlockInfo{
-                .textureCoords = textureCoords[BlockType::AIR]
-            };
-        case BlockType::GRASS:
-            return BlockInfo{
-                .textureCoords = textureCoords[BlockType::GRASS]
-            };
-        case BlockType::STONE:
-            return BlockInfo{
-                .textureCoords = textureCoords[BlockType::STONE]
-            };
-        case BlockType::DIRT:
-            return BlockInfo{
-                .textureCoords = textureCoords[BlockType::DIRT]
-            };
-        default:
-            return BlockInfo{
-                .textureCoords = textureCoords[BlockType::AIR]
-            };
-    }
+    return BlockInfo{
+        .textureCoords = textureCoords[blockType]
+    };
 }

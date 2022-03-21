@@ -8,8 +8,13 @@ struct GLFWwindow;
 
 class Game {
     private:
-        int windowWidth;
-        int windowHeight;
+        int windowWidth = 900;
+        int windowHeight = 800;
+
+        int lastFrameTime = 0;
+        int currentFrameTime = 0;
+
+        float deltaTime = 0;
 
         const float near = 0.1f;
         const float far = 1000.0f;
@@ -17,7 +22,7 @@ class Game {
         float fov = 70.0f;
 
         GLFWwindow* window;
-        // World world;
+        World world;
 
         glm::mat4 projectionMatrix;
         glm::mat4 viewMatrix;

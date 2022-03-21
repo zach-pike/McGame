@@ -23,9 +23,7 @@ using namespace glm;
 #include <glm/gtc/matrix_transform.hpp>
 
 // Game constructor
-Game::Game() {
-    // this->world = World();
-}
+Game::Game() : world{5, 5} {}
 
 // Game destructor
 Game::~Game() {
@@ -82,7 +80,7 @@ void Game::run() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
     // Create the window with glfw
-    window = glfwCreateWindow( 900, 800, "Tutorial 01", NULL, NULL);
+    window = glfwCreateWindow( windowWidth, windowHeight, "Tutorial 01", NULL, NULL);
 
     // If we failed to initialize glfw
     if(window == NULL) {
@@ -118,7 +116,6 @@ void Game::run() {
     programID = LoadShaders("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
 
     Player player(*this);
-    World world(5, 5);
 
     // Set up our buffers
     std::vector<GLfloat> verticies;
@@ -169,9 +166,6 @@ void Game::run() {
 
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
-
-    // Show wireframe
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     int frameCount = 0;
 
@@ -256,6 +250,10 @@ void Game::run() {
             player.getPosition() + player.getCamera().getLookVector(),
             glm::vec3(0,1,0)
         ));
+
+        currentFrameTime = glfwGetTime();
+        deltaTime = currentFrameTime - lastFrameTime;
+        lastFrameTime = currentFrameTime;
 
     } // Check if the ESC key was pressed or the window was closed
     while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0 );

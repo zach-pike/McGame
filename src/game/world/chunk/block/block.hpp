@@ -12,7 +12,8 @@ class Block {
             AIR,
             GRASS,
             STONE,
-            DIRT
+            DIRT,
+            DIAMOND_ORE
         };
     private:
         BlockType type;
